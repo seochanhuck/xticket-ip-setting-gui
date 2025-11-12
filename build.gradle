@@ -19,11 +19,18 @@ test {
     useJUnitPlatform()
 }
 
-// JAR 파일에 메인 클래스 설정
+// JAR 파일에 메인 클래스 설정 및 의존성 포함
 jar {
     manifest {
         attributes 'Main-Class': 'Main'
     }
+    
+    // 모든 의존성을 JAR에 포함
+    from {
+        configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
+    }
+    
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 }
 
 // 한글 깨짐 방지: 자바 컴파일러 인코딩
