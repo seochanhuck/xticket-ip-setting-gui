@@ -17,3 +17,13 @@ dependencies {
 test {
     useJUnitPlatform()
 }
+
+// 한글 깨짐 방지: 자바 컴파일러 인코딩
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8'
+}
+
+// 한글 깨짐 방지: 리소스 인코딩
+processResources {
+    filteringCharset = 'UTF-8'
+}
