@@ -8,6 +8,10 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.regex.Pattern;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonArray;
 
 public class IpSettingGUI extends JFrame {
     private JTextField ipField;
@@ -110,6 +114,9 @@ public class IpSettingGUI extends JFrame {
                 updateConfigFile("config.module.js",
                     "export const DALSEO_SERVER_API_BASE_URL = 'http://" + ipAddress + ":8081';");
 
+                // manifest.json 파일 수정
+                updateManifestJson(ipAddress);
+
                 JOptionPane.showMessageDialog(IpSettingGUI.this,
                     "설정이 성공적으로 저장되었습니다!",
                     "완료",
@@ -134,6 +141,33 @@ public class IpSettingGUI extends JFrame {
 
         // 파일 전체를 newContent로 덮어쓰기
         Files.write(filePath, newContent.getBytes("UTF-8"));
+    }
+
+    private void updateManifestJson(String ipAddress) throws IOException {
+        Path filePath = Paths.get(extensionPath, "manifest.json");
+        
+        if (!Files.exists(filePath)) {
+            throw new IOException("파일을 찾을 수 없습니다: " + filePath);
+        }
+
+        // 파일 전체 읽기
+        String content = new String(Files.readAllBytes(filePath), "UTF-8");
+        
+        // JSON 파싱
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+        JsonObject jsonObject = gson.fromJson(content, JsonObject.class);
+        
+        // host_permissions 배열을 새로 생성하여 덮어쓰기
+        JsonArray hostPermissions = new JsonArray();
+        hostPermissions.add("https://admin3.xticket.kr:9090/main/mainWrap.do");
+        hostPermissions.add("http://" + ipAddress + ":8081/*");
+        jsonObject.add("host_permissions", hostPermissions);
+        
+        // JSON을 다시 문자열로 변환
+        String updatedContent = gson.toJson(jsonObject);
+        
+        // 전체 내용을 파일에 다시 쓰기
+        Files.write(filePath, updatedContent.getBytes("UTF-8"));
     }
 
     private boolean isValidIpAddress(String ip) {
