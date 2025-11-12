@@ -53,7 +53,7 @@ public class IpSettingGUI extends JFrame {
         gbc.gridwidth = 2;
         gbc.fill = GridBagConstraints.NONE;
         gbc.anchor = GridBagConstraints.CENTER;
-        JLabel noticeLabel = new JLabel("<html><center>IP 저장 후 크롬을 껐다 켜주세요.</center></html>");
+        JLabel noticeLabel = new JLabel("<html><center>저장 후 확장프로그램을 새로고침 해주세요.</center></html>");
         noticeLabel.setFont(new Font(noticeLabel.getFont().getName(), Font.PLAIN, 12));
         noticeLabel.setForeground(Color.BLACK);
         mainPanel.add(noticeLabel, gbc);
