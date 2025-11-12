@@ -18,6 +18,13 @@ test {
     useJUnitPlatform()
 }
 
+// JAR 파일에 메인 클래스 설정
+jar {
+    manifest {
+        attributes 'Main-Class': 'Main'
+    }
+}
+
 // 한글 깨짐 방지: 자바 컴파일러 인코딩
 tasks.withType(JavaCompile).configureEach {
     options.encoding = 'UTF-8'
